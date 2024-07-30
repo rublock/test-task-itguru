@@ -7,16 +7,29 @@
 Получение информации о сумме товаров заказанных под каждого клиента (Наименование клиента, сумма):
 ```sql
 SELECT
-    mainapp_client.name,
-    SUM(mainapp_orderitem.quantity * mainapp_product.price) AS total_quantity -- Сумма стоимости всех товаров, заказанных клиентом
+    mc.name,
+    SUM(mo.quantity * mp.price) AS total_quan
 FROM
-    mainapp_orderitem
-JOIN
-    mainapp_client ON mainapp_orderitem.client_id = mainapp_client.id -- Объединяем с таблицей клиентов
-JOIN
-    mainapp_product ON mainapp_orderitem.product_id = mainapp_product.id -- Объединяем с таблицей продуктов
+    mainapp_orderitem AS mo
+INNER JOIN
+    mainapp_client AS mc
+ON 
+    mo.client_id = mc.id
+INNER JOIN
+    mainapp_product AS mp
+ON 
+    mo.product_id = mp.id
 GROUP BY
-    mainapp_client.id, mainapp_client.name
+    mc.id, mc.name
 ORDER BY
-    mainapp_client.name ASC;
+    mc.name ASC;
+```
+Найти количество дочерних элементов первого уровня вложенности для категорий номенклатуры:
+```sql
+SELECT 
+    COUNT(*) AS child_count
+FROM 
+    mainapp_category
+WHERE 
+    parent_id = 1;
 ```
