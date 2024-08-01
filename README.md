@@ -26,10 +26,15 @@ ORDER BY
 ```
 Найти количество дочерних элементов первого уровня вложенности для категорий номенклатуры:
 ```sql
-SELECT 
-    COUNT(*) AS child_count
-FROM 
-    mainapp_category
-WHERE 
-    parent_id = 1;
+SELECT
+    mc.name,
+    COUNT(mp.parent_id) AS reference_count
+FROM
+    mainapp_category AS mc
+LEFT JOIN
+    mainapp_category AS mp ON mc.id = mp.parent_id
+GROUP BY
+    mc.id, mc.name
+ORDER BY
+    reference_count DESC;
 ```
